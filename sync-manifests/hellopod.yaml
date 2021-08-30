@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: busybox1
+  name: branch1
   namespace: kommander
 spec:
   containers:
