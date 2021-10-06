@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    fluxcd.io/ignore: "false"
+    linkerd.io/inject: enabled
+  name: prod
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: podinfo
+  namespace: prod
+  annotations:
+    fluxcd.io/ignore: "false"
+spec:
+  releaseName: podinfo
+  chart:
+    git: git@github.com:takirala/gitops-helm-workshop
+    ref: master
+    path: cluster/charts/podinfo
+  values:
+    image:
+      repository: stefanprodan/podinfo
+      tag: 3.1.0
+    service:
+      enabled: true
+      type: ClusterIP
+---
