@@ -6,6 +6,16 @@ metadata:
     linkerd.io/inject: enabled
   name: prod
 ---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: podinfo
+  namespace: prod
+spec:
+  interval: 10m
+  timeout: 1m
+  url: https://stefanprodan.github.io/k8s-podinfo
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -14,11 +24,24 @@ metadata:
   annotations:
     fluxcd.io/ignore: "false"
 spec:
-  releaseName: podinfo
   chart:
-    git: git@github.com:takirala/gitops-helm-workshop
-    ref: master
-    path: cluster/charts/podinfo
+    spec:
+      chart: sp/podinfo
+      sourceRef:
+        kind: HelmRepository
+        name: podinfo
+        namespace: prod
+      version: 0.12.2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 30
+  interval: 15s
+  releaseName: podinfo
+  targetNamespace: prod
+  upgrade:
+    remediation:
+      retries: 30
   values:
     image:
       repository: stefanprodan/podinfo
