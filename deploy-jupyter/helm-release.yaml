@@ -1,0 +1,23 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: jupyter 
+spec:
+  chart:
+    spec:
+      chart: jupyterhub
+      sourceRef:
+        kind: HelmRepository
+        name: jupyterhub
+  install:
+    createNamespace: true
+    remediation:
+      retries: 30
+  interval: 15s
+  releaseName: jupyterhub-release
+  upgrade:
+    remediation:
+      retries: 30
+  valuesFrom:
+    - kind: ConfigMap
+      name: jupyterhub-disable-ingress
