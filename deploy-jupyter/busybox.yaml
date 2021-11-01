@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: hellowsns
+spec:
+  containers:
+  - image: radial/busyboxplus:git
+    imagePullPolicy: IfNotPresent
+    name: ephemeral-demo
+    command:
+    - "/bin/sh"
+    - "-ce"
+    - "sleep 10000"
